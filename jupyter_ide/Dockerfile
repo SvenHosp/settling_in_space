@@ -68,6 +68,8 @@ USER $NB_UID
 # install sparkmagic
 RUN mkdir -p /home/$NB_USER/.jupyter \
     && jupyter nbextension enable --py --sys-prefix widgetsnbextension \
+    && jupyter labextension install @jupyter-widgets/jupyterlab-manager \
+    && jupyter labextension install jupyter-matplotlib \
     && /app/jupyter/bin/pip install /tmp/src/magics/custommagics \
     && mv /tmp/conf/jupyter/jupyter_notebook_config.json /home/$NB_USER/.jupyter/jupyter_notebook_config.json \
     && mv /tmp/conf/ipython /home/$NB_USER/.ipython
