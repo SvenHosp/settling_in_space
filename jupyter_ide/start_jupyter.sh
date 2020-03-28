@@ -1,0 +1,2 @@
+docker build --rm -t calisto/jupyterlab .
+docker run -it --rm -p 8888:8888 --mount type=bind,source="/Users/xxxxxx/Documents/repos/github",target=/home/calisto/github --name jupyterlab calisto/jupyterlab

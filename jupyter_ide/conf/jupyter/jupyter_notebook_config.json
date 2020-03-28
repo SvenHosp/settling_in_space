@@ -1,0 +1,8 @@
+{
+  "NotebookApp": {
+    "nbserver_extensions": {
+      "sparkmagic": true
+    },
+    "password": "sha1:67ddc990ab00:1be3875db374edca8402b8925fb59a8eada5c6ba"
+  }
+}

@@ -1,0 +1,14 @@
+= Settling in Space
+
+== short description
+It is a game about expanding earths hegemony in a part of our galaxy.
+
+This game is splittet in two parts:
+
+* expanding earth hegemony
+* war against unknown invading species and if you win this war the founding of the federation of planets
+
+== description
+You are commander-in-chief of early earth Starfleet. Your aim is it to protect the earth. Doing so you have to manage economy for building and maintaining starships, to send them out to explore, colonize new worlds and to form alliances with other species.
+
+Your challange is it to command your ships to their missions and building infrastructure in outerspace when communitcation needs time between earth and your ships and colonies.

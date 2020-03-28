@@ -1,0 +1,2 @@
+copied from https://nbviewer.jupyter.org/github/sberke/ipython-notebooks/blob/master/examples/Demo%20of%20plantUML%20in%20ipython%20notebook.ipynb
+and modified
