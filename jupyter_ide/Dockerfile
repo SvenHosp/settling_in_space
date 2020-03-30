@@ -49,8 +49,14 @@ RUN apt-get update \
     && conda install -c conda-forge nodejs \
     && /app/jupyter/bin/pip install --upgrade pip==20.0.2 \
     && /app/jupyter/bin/pip install -r requirements.txt \
-    && wget --quiet "http://downloads.sourceforge.net/project/plantuml/${PLANTUML_VERSION}/plantuml.${PLANTUML_VERSION}.jar" -O /app/plantuml.jar \
-    && chmod -R 777 /app/jupyter \
+    && wget --quiet "http://downloads.sourceforge.net/project/plantuml/${PLANTUML_VERSION}/plantuml.${PLANTUML_VERSION}.jar" -O /app/plantuml.jar
+
+COPY start_lab.sh /home/$NB_USER/
+COPY tools /home/$NB_USER/tools/
+COPY conf tmp/conf
+COPY src tmp/src
+
+RUN chmod -R 777 /app/jupyter \
     && chmod -R 777 /home/$NB_USER \
     && chmod -R u+x ${APP_ROOT} \
     && chgrp -R 0 ${APP_ROOT} \

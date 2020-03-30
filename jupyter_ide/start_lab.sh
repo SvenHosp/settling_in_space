@@ -1,3 +1,13 @@
 #!/bin/bash
+echo "Enter github password:"
+read -s gitpasswd
+export GITPASSWD=$gitpasswd
+echo "Enter git user E-Mail:"
+read -s gituseremail
+echo "Enter git user name:"
+read -s gitusername
+git config --global user.email $gituseremail
+git config --global user.name $gitusername
+
 echo "JupyterLab is now running. Go to localhost:8888 and enter 'hallo'"
 conda run -n jupyter jupyter lab --ip=* --port=8888
