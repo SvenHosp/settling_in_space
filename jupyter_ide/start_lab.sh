@@ -1,7 +1,4 @@
 #!/bin/bash
-echo "Enter github password:"
-read -s gitpasswd
-export GITPASSWD=$gitpasswd
 echo "Enter git user E-Mail:"
 read -s gituseremail
 echo "Enter git user name:"
