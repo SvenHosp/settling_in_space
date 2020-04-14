@@ -2,3 +2,5 @@
 .svg
 .DS_Store
 .ipynb_checkpoints/
+settlingInSpace.egg-info/
+__pycache__
