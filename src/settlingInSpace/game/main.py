@@ -7,6 +7,7 @@ class SettlingMain():
     
     def start(self, servermode=False):
         self.game_engine = GameEngine()
+        self.start_gameengine()
         
     def start_gameengine(self):
         self.game_engine.start()
