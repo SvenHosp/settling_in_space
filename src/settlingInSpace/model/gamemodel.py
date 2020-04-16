@@ -2,6 +2,7 @@
 main gamemodel module
 """
 import numpy
+from .starsystem import StarSystemModel
 
 class GameModel():
     def __init__(self):
@@ -24,7 +25,9 @@ class GameModel():
         create new universe with randomly set star systems
         """
         dict_cylinder_points = GameModel.create_cylinder_points()
-        pass
+        self.list_starsystems = GameModel.create_starsystems(
+            dict_points=dict_cylinder_points
+        )
     
     @staticmethod
     def create_cylinder_points(
@@ -33,7 +36,10 @@ class GameModel():
     ):
         """
         returns dictionary with randomly generates points
-        arranged as cylinder    
+        arranged as cylinder
+        
+        param number_points(int): absolute number of points
+        param vector_len([x(int),y(int),z(int)]): dimensions of cylinder
         """
         _gr = 1
         _a = numpy.random.rand(number_points) * (2 * numpy.pi)
@@ -63,4 +69,19 @@ class GameModel():
         }
 
         return _return
-
+    
+    @staticmethod
+    def create_starsystems(
+        dict_points={}
+    ):
+        """
+        creates list of starsystems from points_dict
+        
+        param dict_points({'x':([x1,x2,...,xn]),'y':([y1,y2,...,yn]),'z':([z1,z2,...,zn]),'matrix':[[x1,y1,z1],[x2,y2,z2],...,[xn,yn,zn]]})
+        """
+        list_starsystems = []
+        for point in dict_points['matrix']:
+            list_starsystems.append(StarSystemModel(position=point))
+        return list_starsystems
+            
+        
