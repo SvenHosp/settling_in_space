@@ -3,6 +3,8 @@ game main module
 """
 import threading
 import time
+from pathlib import Path
+import yaml
 from settlingInSpace.model.gamemodel import GameModel
 
 class SettlingMain():
@@ -41,6 +43,8 @@ class GameEngine():
         # TODO: read it from a config yaml
         self.heartbeat_sec = 1
         self.gamemodel = GameModel()
+        
+        self.parse_names_yaml()
     
     def start(self):
         """start game engine"""
@@ -64,3 +68,15 @@ class GameEngine():
         """method to run code every beat"""
         #print('play')
         pass
+    
+    def parse_names_yaml(self, yaml_fqn=None):
+        """parses names.yaml
+        
+        param: yaml_fqn(String): path to yaml
+        """
+        if yaml_fqn is None:
+            yaml_fqn = Path(Path(Path(__file__).parent).resolve()) / 'names.yaml'
+        with open(str(yaml_fqn), 'r') as ymlfile:
+            dict_from_yaml = yaml.safe_load(ymlfile)
+            self.list_starnames = dict_from_yaml['stars']
+        
