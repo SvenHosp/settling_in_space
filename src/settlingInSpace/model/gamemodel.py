@@ -2,7 +2,7 @@
 main gamemodel module
 """
 import numpy
-from .starsystem import StarSystemModel
+from .starsystem import StarSystemModel, StarSystemNaturalObjectModel
 
 class GameModel():
     def __init__(self):
@@ -17,6 +17,7 @@ class GameModel():
     
     def initialize(
         self,
+        number_points=40,
         list_starnames=[],
         list_starsystemnames=[],
         szenario_path=None
@@ -25,25 +26,99 @@ class GameModel():
         initialize Model
         
         param szenario_path(String): path to a scenario file to be loaded
+        param number_points(int): absolute number of points
         param list_starnames(List): list of names for stars
         param list_starsystemnames(List): list of names for objects in starsystems
         """
         self.starnames = list_starnames
         self.starsystemnames = list_starsystemnames
         if(szenario_path is None):
-            self.initialize_universe_random()
+            self.initialize_universe_random(
+                number_points=number_points
+            )
         else:
             pass
     
-    def initialize_universe_random(self):
+    def initialize_universe_random(
+        self,
+        number_points=40
+    ):
         """
         create new universe with randomly set star systems
+        
+        param number_points(int): absolute number of points
         """
-        dict_cylinder_points = GameModel.create_cylinder_points()
+        dict_cylinder_points = GameModel.create_cylinder_points(
+            number_points=number_points
+        )
         self.dict_starsystems = GameModel.create_starsystems(
             dict_points=dict_cylinder_points,
             list_starnames=self.starnames
         )
+        self.populate_starsystems()
+    
+    def populate_starsystems(
+        self,
+        max_step_size=10000,
+        min_stap_size=500,
+        max_speed=0.5
+    ):
+        """
+        creates objects in star systems
+        
+        param max_step_size(int): max distance between star objects
+        param min_step_size(int): min distance between star objects
+        """
+        from random import Random
+        
+        _random = Random()
+        _list_names = self.starsystemnames.copy()
+        _array_number_planets = GameModel.get_number_planets_gaussian_distribution(
+            size=len(self.dict_starsystems)
+        )
+        for system in self.dict_starsystems.values():
+            _number_planets = _array_number_planets[0]
+            _array_number_planets = numpy.delete(_array_number_planets,0,0)
+            
+            _ellipse_a = (numpy.random.random(_number_planets)*max_step_size).astype(numpy.int64)
+            _ellipse_b = (numpy.random.random(_number_planets)*max_step_size).astype(numpy.int64)
+            _ellipse_z = numpy.random.random(_number_planets) # default 0 <-> 1
+            
+            _var_a_before = 0
+            _var_b_before = 0
+            
+            _list_objects = []
+            for i in range(0,_number_planets):
+                _index = _random.randrange(len(_list_names))
+                _name = _list_names.pop(_index)
+                
+                _a = _ellipse_a[i] if _ellipse_a[i] > min_stap_size else min_stap_size + _ellipse_a[i]
+                _b = _ellipse_b[i] if _ellipse_b[i] > min_stap_size else min_stap_size + _ellipse_b[i]
+                _var_z = _ellipse_z[i]
+                
+                _var_a = _var_a_before + _a
+                _var_b = _var_b_before + _b
+                
+                _speed = max_speed / _var_a
+                
+                _angle = _random.randrange(360)
+                
+                _list_objects.append(StarSystemNaturalObjectModel(
+                    var_a = _var_a,
+                    var_b = _var_b,
+                    var_z = _var_z,
+                    speed = _speed,
+                    angle = _angle,
+                    name = _name
+                ))
+                
+                _var_a_before = _var_a
+                _var_b_before = _var_b
+
+            system.populate_starsystem(
+                system_size=_number_planets,
+                system_objects=_list_objects
+            )
     
     @staticmethod
     def create_cylinder_points(
@@ -105,7 +180,6 @@ class GameModel():
         for point in dict_points['matrix']:
             _index = _random.randrange(len(_list_starnames))
             _star_name = _list_starnames.pop(_index)
-            #del _list_starnames[_index]
             _dict_starsystems[_star_name] = StarSystemModel(
                 position=point,
                 name=_star_name
@@ -113,14 +187,25 @@ class GameModel():
         return _dict_starsystems
     
     @staticmethod
-    def populate_starsystems(
-        dict_starsystems={},
-        list_starsystemnames=[]
+    def get_number_planets_gaussian_distribution(
+        loc=6,
+        scale=3,
+        size=40,
+        limits=(3,12)
     ):
         """
-        creates objects in star systems
+        return array gaussian distribution
         
-        param dict_starsystems(dict): dictionary with starsystems
-        param list_starsystemnames(List): list of possible names for starsystems
+        for loc, scale, size look at numpy documentation of
+        numpy.random.normal()
+        
+        param limits(Tuple): all values smaller first entry or greater
+        second entry will be set to loc value
         """
-        pass
+        array = numpy.random.normal(loc, scale, size).astype(numpy.int64)
+        for i in range(0,size):
+            value = array[i]
+            if value < limits[0] or value > limits[1]:
+                value = loc
+            array[i] = value
+        return array
