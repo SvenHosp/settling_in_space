@@ -100,7 +100,11 @@ class GameEngine():
             yaml_fqn = Path(Path(Path(__file__).parent).resolve()) / 'names.yaml'
         with open(str(yaml_fqn), 'r') as ymlfile:
             dict_from_yaml = yaml.safe_load(ymlfile)
+            # names taken from:
+            # https://en.wikipedia.org/wiki/List_of_proper_names_of_stars
             list_starnames = dict_from_yaml['stars']
+            # names taken from:
+            # https://minorplanetcenter.net/iau/lists/MPNames.html
             list_starsystemnames = dict_from_yaml['starsystemobject']
         return list_starnames, list_starsystemnames
         
