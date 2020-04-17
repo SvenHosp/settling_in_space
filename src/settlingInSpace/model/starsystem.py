@@ -37,6 +37,13 @@ class StarSystemModel():
         """
         self.system_size = system_size
         self.system_objects = system_objects
+        
+    def move_natural_objects_through_system(self):
+        """
+        moves all natural objects in star system
+        """
+        for obj in self.system_objects:
+            obj.move_object_through_starsystem()
     
     def create_from_dict(self):
         """

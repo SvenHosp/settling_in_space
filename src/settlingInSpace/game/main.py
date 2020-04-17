@@ -86,7 +86,8 @@ class GameEngine():
     
     def beat(self):
         """method to run code every beat"""
-        #print('play')
+        for system in self.gamemodel.dict_starsystems.values():
+            system.move_natural_objects_through_system()
         pass
     
     @staticmethod
