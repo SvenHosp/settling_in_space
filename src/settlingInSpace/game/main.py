@@ -9,24 +9,32 @@ from settlingInSpace.model.gamemodel import GameModel
 
 class SettlingMain():
     """Main class to start the game"""
-    def __init__(self):
-        """init method"""
-        pass
-    
-    def start(self, servermode=False):
+    def __init__(self, servermode=False):
         """
-        call to start game
+        init method
         
-        servermode(boolean): switch to start a rpc server
+        param servermode(boolean): switch to start a rpc server
         """
         self.game_engine = GameEngine()
-        self.start_gameengine()
-        
-    def start_gameengine(self):
+    
+    def configure(self):
         """
-        start gameengine
+        configure game
+        """
+        self.game_engine.configure()
+    
+    def initialize(self):
+        """
+        initialize
+        """
+        self.game_engine.initialize()
+    
+    def start(self):
+        """
+        call to start game
         """
         self.game_engine.start()
+        
 
 class GameEngine():
     """
@@ -44,12 +52,23 @@ class GameEngine():
         self.heartbeat_sec = 1
         self.gamemodel = GameModel()
         
-        self.parse_names_yaml()
+    def configure(self):
+        """
+        configure game engine
+        """
+        self.gamemodel.configure()
+    
+    def initialize(self):
+        """
+        initialize game engine
+        """
+        list_starnames = GameEngine.parse_names_yaml()
+        self.gamemodel.initialize(
+            list_starnames=list_starnames
+        )
     
     def start(self):
         """start game engine"""
-        self.gamemodel.initialize()
-        
         self.startHeartBeat()
     
     def startHeartBeat(self):
@@ -69,14 +88,17 @@ class GameEngine():
         #print('play')
         pass
     
-    def parse_names_yaml(self, yaml_fqn=None):
+    @staticmethod
+    def parse_names_yaml(yaml_fqn=None):
         """parses names.yaml
         
         param: yaml_fqn(String): path to yaml
         """
+        list_starnames = []
         if yaml_fqn is None:
             yaml_fqn = Path(Path(Path(__file__).parent).resolve()) / 'names.yaml'
         with open(str(yaml_fqn), 'r') as ymlfile:
             dict_from_yaml = yaml.safe_load(ymlfile)
-            self.list_starnames = dict_from_yaml['stars']
+            list_starnames = dict_from_yaml['stars']
+        return list_starnames
         
