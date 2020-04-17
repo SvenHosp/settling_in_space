@@ -62,9 +62,10 @@ class GameEngine():
         """
         initialize game engine
         """
-        list_starnames = GameEngine.parse_names_yaml()
+        list_starnames, list_starsystemnames = GameEngine.parse_names_yaml()
         self.gamemodel.initialize(
-            list_starnames=list_starnames
+            list_starnames=list_starnames,
+            list_starsystemnames=list_starsystemnames
         )
     
     def start(self):
@@ -100,5 +101,6 @@ class GameEngine():
         with open(str(yaml_fqn), 'r') as ymlfile:
             dict_from_yaml = yaml.safe_load(ymlfile)
             list_starnames = dict_from_yaml['stars']
-        return list_starnames
+            list_starsystemnames = dict_from_yaml['starsystemobject']
+        return list_starnames, list_starsystemnames
         

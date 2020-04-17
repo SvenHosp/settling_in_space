@@ -15,13 +15,21 @@ class GameModel():
         """
         pass
     
-    def initialize(self, list_starnames=[], szenario_path=None):
+    def initialize(
+        self,
+        list_starnames=[],
+        list_starsystemnames=[],
+        szenario_path=None
+    ):
         """
         initialize Model
         
         param szenario_path(String): path to a scenario file to be loaded
+        param list_starnames(List): list of names for stars
+        param list_starsystemnames(List): list of names for objects in starsystems
         """
         self.starnames = list_starnames
+        self.starsystemnames = list_starsystemnames
         if(szenario_path is None):
             self.initialize_universe_random()
         else:
@@ -87,6 +95,7 @@ class GameModel():
         creates list of starsystems from points_dict
         
         param dict_points({'x':([x1,x2,...,xn]),'y':([y1,y2,...,yn]),'z':([z1,z2,...,zn]),'matrix':[[x1,y1,z1],[x2,y2,z2],...,[xn,yn,zn]]})
+        param list_starnames(List): list of names for stars
         """
         from random import Random
 
@@ -102,5 +111,16 @@ class GameModel():
                 name=_star_name
             )
         return _dict_starsystems
-            
+    
+    @staticmethod
+    def populate_starsystems(
+        dict_starsystems={},
+        list_starsystemnames=[]
+    ):
+        """
+        creates objects in star systems
         
+        param dict_starsystems(dict): dictionary with starsystems
+        param list_starsystemnames(List): list of possible names for starsystems
+        """
+        pass
