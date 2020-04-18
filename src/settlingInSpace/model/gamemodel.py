@@ -60,8 +60,8 @@ class GameModel():
     def populate_starsystems(
         self,
         max_step_size=10000,
-        min_stap_size=500,
-        max_speed=0.5
+        min_step_size=500,
+        max_speed=1
     ):
         """
         creates objects in star systems
@@ -92,8 +92,8 @@ class GameModel():
                 _index = _random.randrange(len(_list_names))
                 _name = _list_names.pop(_index)
                 
-                _a = _ellipse_a[i] if _ellipse_a[i] > min_stap_size else min_stap_size + _ellipse_a[i]
-                _b = _ellipse_b[i] if _ellipse_b[i] > min_stap_size else min_stap_size + _ellipse_b[i]
+                _a = _ellipse_a[i] if _ellipse_a[i] > min_step_size else min_step_size + _ellipse_a[i]
+                _b = _ellipse_b[i] if _ellipse_b[i] > min_step_size else min_step_size + _ellipse_b[i]
                 _var_z = _ellipse_z[i]
                 
                 _var_a = _var_a_before + _a
@@ -109,7 +109,8 @@ class GameModel():
                     var_z = _var_z,
                     speed = _speed,
                     angle = _angle,
-                    name = _name
+                    name = _name,
+                    moving_reference = system
                 ))
                 
                 _var_a_before = _var_a
@@ -117,7 +118,7 @@ class GameModel():
 
             system.populate_starsystem(
                 system_size=_number_planets,
-                system_objects=_list_objects
+                list_system_objects=_list_objects
             )
     
     @staticmethod
@@ -181,7 +182,7 @@ class GameModel():
             _index = _random.randrange(len(_list_starnames))
             _star_name = _list_starnames.pop(_index)
             _dict_starsystems[_star_name] = StarSystemModel(
-                position=point,
+                position=numpy.array(point),
                 name=_star_name
             )
         return _dict_starsystems
