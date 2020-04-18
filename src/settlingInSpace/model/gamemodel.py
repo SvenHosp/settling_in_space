@@ -59,8 +59,8 @@ class GameModel():
     
     def populate_starsystems(
         self,
-        max_step_size=10000,
-        min_step_size=500,
+        max_step_size=100000,
+        min_step_size=10000,
         max_speed=1
     ):
         """
@@ -77,6 +77,7 @@ class GameModel():
             size=len(self.dict_starsystems)
         )
         for system in self.dict_starsystems.values():
+            # set planets
             _number_planets = _array_number_planets[0]
             _array_number_planets = numpy.delete(_array_number_planets,0,0)
             
@@ -120,6 +121,7 @@ class GameModel():
                 system_size=_number_planets,
                 list_system_objects=_list_objects
             )
+            
     
     @staticmethod
     def create_cylinder_points(
