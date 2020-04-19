@@ -1,13 +1,33 @@
-version: "2"
+version: "3"
 services:
+  #node:
+  #  image: "node:13"
+  #  user: "node"
+  #  working_dir: /home/node/app
+  #  networks:
+  #    SettlingInSpace:
+  #        ipv4_address: 172.29.0.2
+  #  environment:
+  #    - NODE_ENV=production
+  #  volumes:
+  #    - ./:/home/node/app
+  #  expose:
+  #    - "8081"
+  #  command: "npm start"
   node:
-    image: "node:8"
-    user: "node"
-    working_dir: /home/node/app
-    environment:
-      - NODE_ENV=production
-    volumes:
-      - ./:/home/node/app
+    image: "SettlingInSpace"
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    networks:
+      SettlingInSpace:
+          ipv4_address: 172.29.0.3
     expose:
-      - "8081"
-    command: "npm start"
+     - "8082"
+    
+networks:
+    SettlingInSpace:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.29.0.0/16

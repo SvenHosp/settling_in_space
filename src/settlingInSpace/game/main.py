@@ -1,6 +1,8 @@
 """
 game main module
 """
+from xmlrpc.server import SimpleXMLRPCServer
+from xmlrpc.server import SimpleXMLRPCRequestHandler
 import threading
 import time
 from pathlib import Path
@@ -9,13 +11,28 @@ from settlingInSpace.model.gamemodel import GameModel
 
 class SettlingMain():
     """Main class to start the game"""
-    def __init__(self, servermode=False):
+    def __init__(self):
         """
         init method
         
         param servermode(boolean): switch to start a rpc server
         """
         self.game_engine = GameEngine()
+        self.interface = GameEngine_Interface(gameEngine=self.game_engine)
+    
+    def start_rpc_server(self):
+        self.api_server = RPCServer(self.interface)
+        self.api_server.start()
+        
+
+class GameEngine_Interface():
+    """Interface class for GameEngine"""
+    
+    def __init__(self, gameEngine=None):
+        """
+        init method
+        """
+        self.game_engine = gameEngine
     
     def configure(self):
         """
@@ -34,6 +51,7 @@ class SettlingMain():
         call to start game
         """
         self.game_engine.start()
+        
         
 
 class GameEngine():
@@ -108,4 +126,29 @@ class GameEngine():
             # https://minorplanetcenter.net/iau/lists/MPNames.html
             list_starsystemnames = dict_from_yaml['starsystemobject']
         return list_starnames, list_starsystemnames
-        
+
+class RequestHandler(SimpleXMLRPCRequestHandler):
+    rpc_paths = ('/RPC2',)
+
+
+class RPCServer():
+    def __init__(self, gameEngineInterface):
+        '''init'''
+        self.gameEngineInterface = gameEngineInterface
+
+    def start(self):
+        '''starts the server'''
+        # Create server
+        with SimpleXMLRPCServer(('0.0.0.0', 8082),
+                                requestHandler=RequestHandler) as server:
+            server.register_introspection_functions()
+
+            server.register_instance(self.gameEngineInterface)
+
+            # Run the server's main loop
+            server.serve_forever()
+
+
+if __name__ == '__main__':
+    main = SettlingMain()
+    main.start_rpc_server()
