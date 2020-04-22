@@ -10,4 +10,4 @@ RUN pip install --no-cache-dir -r requirements.txt \
 
 EXPOSE 8082
 
-CMD [ "python -m settlingInSpace.game.main" ]
+CMD ["python", "./src/settlingInSpace/game/main.py"]
