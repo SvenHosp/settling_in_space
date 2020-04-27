@@ -1,0 +1,25 @@
+FROM python:3
+
+RUN pip install --upgrade pip==20.0.2
+
+# We copy just the requirements.txt first to leverage Docker cache
+COPY ./flask/requirements.txt /app/requirements.txt
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get -y install nodejs npm \
+    && apt-get clean \
+    && npm install npm@latest -g \
+    && npm install -g @vue/cli@4.3.1 \
+    && vue create my-app -n --default \
+    && pip install -r requirements.txt
+
+COPY ./flask/src /app
+
+#RUN cd my-app \
+#    && npm run serve &
+
+ENTRYPOINT [ "python" ]
+
+CMD [ "app.py" ]
