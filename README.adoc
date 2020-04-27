@@ -12,3 +12,6 @@ This game is splittet in two parts:
 You are commander-in-chief of early earth Starfleet. Your aim is it to protect the earth. Doing so you have to manage economy for building and maintaining starships, to send them out to explore, colonize new worlds and to form alliances with other species.
 
 Your challange is it to command your ships to their missions and building infrastructure in outerspace when communitcation needs time between earth and your ships and colonies.
+
+
+https://testdriven.io/blog/developing-a-single-page-app-with-flask-and-vuejs/#flask-setup
