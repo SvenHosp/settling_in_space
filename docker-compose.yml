@@ -8,8 +8,9 @@ services:
       context: .
       dockerfile: Dockerfile.flask
     ports:
-     - "8084:8080"
-     - "8081:5000"
+     - "8084:8765"
+    environment:
+     - PORT=8765
     networks:
       SettlingInSpace:
           ipv4_address: 172.29.0.2
