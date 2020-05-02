@@ -3,10 +3,13 @@ FROM python:3
 WORKDIR /app
 
 RUN pip install --upgrade pip==20.0.2
-COPY requirements.txt ./
+COPY dash/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
-COPY admin/rpc_server/admin_rpc.py .
 
-EXPOSE 8082
+COPY dash .
 
-CMD ["python", "/app/admin_rpc.py"]
+EXPOSE 8050
+
+ENTRYPOINT ["python"]
+
+CMD ["src/app.py"]

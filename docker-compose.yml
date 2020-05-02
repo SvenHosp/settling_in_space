@@ -1,16 +1,12 @@
 version: "3"
 services:
-  flask:
+  dash:
     image: "frontend"
-    volumes:
-      - /Users/svenhosp/Documents/repos/github:/app/github
     build:
       context: .
-      dockerfile: Dockerfile.flask
+      dockerfile: Dockerfile.dash
     ports:
-     - "8084:8765"
-    environment:
-     - PORT=8765
+     - "8084:8050"
     networks:
       SettlingInSpace:
           ipv4_address: 172.29.0.2
@@ -19,11 +15,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.python
+    volumes:
+      - /Users/svenhosp/Documents/repos/github/settling_in_space/src:/app/src
     networks:
       SettlingInSpace:
           ipv4_address: 172.29.0.3
     ports:
      - "8082:8082"
+     - "8088:8088"
   jupyterlab:
     image: "calisto/jupyterlab"
 #    build:
