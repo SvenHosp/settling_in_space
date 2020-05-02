@@ -3,6 +3,18 @@ from xmlrpc.server import SimpleXMLRPCRequestHandler
 import psutil
 from subprocess import Popen
 
+class RPC_functions():
+    def restart_gameserver():
+        for process in psutil.process_iter():
+            if process.cmdline() == ['python', '/app/src/settlingInSpace/game/main.py']:
+                print('terminating rpc game server')
+                process.terminate()
+                break
+            else:
+                print('starting rpc game server')
+                Popen(['python', '/app/src/settlingInSpace/game/main.py'])
+        return True
+
 class RequestHandler(SimpleXMLRPCRequestHandler):
     rpc_paths = ('/RPC2',)
 
@@ -19,20 +31,10 @@ class RPCServer():
                                 requestHandler=RequestHandler) as server:
             server.register_introspection_functions()
 
-            server.register_instance(RPCServer.restart_gameserver)
+            server.register_instance(RPC_functions)
 
             # Run the server's main loop
             server.serve_forever()
-    
-    def restart_gameserver():
-        for process in psutil.process_iter():
-            if process.cmdline() == ['python', '/app/src/settlingInSpace/game/main.py']:
-                print('terminating rpc game server')
-                process.terminate()
-                break
-            else:
-                print('starting rpc game server')
-                Popen(['python', '/app/src/settlingInSpace/game/main.py'])
 
 
 if __name__ == '__main__':

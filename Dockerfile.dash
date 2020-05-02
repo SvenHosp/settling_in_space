@@ -6,10 +6,11 @@ RUN pip install --upgrade pip==20.0.2
 COPY dash/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY dash .
+COPY admin/admin_dash/admin_app.py /app/admin_app.py
 
 EXPOSE 8050
+EXPOSE 8088
 
 ENTRYPOINT ["python"]
 
-CMD ["src/app.py"]
+CMD ["/app/admin_app.py"]
