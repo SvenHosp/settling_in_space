@@ -41,6 +41,16 @@ services:
     networks:
       SettlingInSpace:
           ipv4_address: 172.29.0.4
+  admin:
+    image: "admin"
+    build:
+      context: .
+      dockerfile: Dockerfile.admin
+    ports:
+     - "8090:8050"
+    networks:
+      SettlingInSpace:
+          ipv4_address: 172.29.0.5
 networks:
     SettlingInSpace:
         ipam:

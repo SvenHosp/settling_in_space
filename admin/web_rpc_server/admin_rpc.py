@@ -5,21 +5,21 @@ from subprocess import Popen
 import psutil
 
 class RPC_functions():
-    def start_gameserver():
+    def start_webpageserver():
         for process in psutil.process_iter():
-            if process.cmdline() == ['python', '/app/src/settlingInSpace/game/main.py']:
-                logging.info('terminating rpc game server')
+            if process.cmdline() == ['python', '/app/src/app.py']:
+                logging.info('terminating webpage server')
                 process.terminate()
                 
-        logging.info('starting rpc game server')
-        Popen(['python', '/app/src/settlingInSpace/game/main.py'])
+        logging.info('starting webpage server')
+        Popen(['python', '/app/src/app.py'])
         
         return True
     
-    def stop_gameserver():
+    def stop_webpageserver():
         for process in psutil.process_iter():
-            if process.cmdline() == ['python', '/app/src/settlingInSpace/game/main.py']:
-                logging.info('terminating rpc game server')
+            if process.cmdline() == ['python', '/app/src/app.py']:
+                logging.info('terminating webpage server')
                 process.terminate()
                 break
         return True
