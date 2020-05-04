@@ -8,8 +8,9 @@ services:
     volumes:
       - /Users/svenhosp/Documents/repos/github/settling_in_space/dash/src:/app/src
     ports:
-     - "8084:8050"
-     - "8089:8088"
+     - "8081:8050"
+    expose:
+     - "8088"
     environment:
      - SCOPE=dashserver
     networks:
@@ -27,9 +28,9 @@ services:
     networks:
       SettlingInSpace:
           ipv4_address: 172.29.0.3
-    ports:
-     - "8082:8082"
-     - "8088:8088"
+    expose:
+     - "8082"
+     - "8088"
   jupyterlab:
     image: "calisto/jupyterlab"
 #    build:
@@ -41,7 +42,7 @@ services:
       - GITUSEREMAIL=calisto107@mail.com
       - GITUSERNAME=calisto107
     ports:
-      - "8083:8888"
+      - "8082:8888"
     networks:
       SettlingInSpace:
           ipv4_address: 172.29.0.4
@@ -51,7 +52,7 @@ services:
       context: .
       dockerfile: Dockerfile.admin
     ports:
-     - "8090:8050"
+     - "8083:8050"
     networks:
       SettlingInSpace:
           ipv4_address: 172.29.0.5
