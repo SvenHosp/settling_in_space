@@ -10,6 +10,8 @@ services:
     ports:
      - "8084:8050"
      - "8089:8088"
+    environment:
+     - SCOPE=dashserver
     networks:
       SettlingInSpace:
           ipv4_address: 172.29.0.2
@@ -20,6 +22,8 @@ services:
       dockerfile: Dockerfile.python
     volumes:
       - /Users/svenhosp/Documents/repos/github/settling_in_space/src:/app/src
+    environment:
+     - SCOPE=gameserver
     networks:
       SettlingInSpace:
           ipv4_address: 172.29.0.3

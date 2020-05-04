@@ -5,7 +5,9 @@ WORKDIR /app
 RUN pip install --upgrade pip==20.0.2
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
-COPY admin/rpc_server/admin_rpc.py .
+
+COPY admin/rpc_server/admin_rpc.py /app/admin_rpc.py
+COPY admin/rpc_server/config.yaml /app/config.yaml
 
 EXPOSE 8082
 EXPOSE 8088

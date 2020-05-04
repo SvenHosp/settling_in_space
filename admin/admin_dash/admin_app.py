@@ -29,11 +29,11 @@ def start_gameserver(btn1, btn2):
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if 'startgameserver' in changed_id:
         with xmlrpc.client.ServerProxy("http://rpcgame:8088") as proxy:
-            proxy.start_gameserver()
+            proxy.start_server()
         msg = 'game server started'
     elif 'stopgameserver' in changed_id:
         with xmlrpc.client.ServerProxy("http://rpcgame:8088") as proxy:
-            proxy.stop_gameserver()
+            proxy.stop_server()
         msg = 'game server stopped'
 
     return html.Div(msg)
@@ -48,11 +48,11 @@ def start_gameserver(btn1, btn2):
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if 'startwebpageserver' in changed_id:
         with xmlrpc.client.ServerProxy("http://dash:8088") as proxy:
-            proxy.start_webpageserver()
+            proxy.start_server()
         msg = 'webpage server started'
     elif 'stopwebpageserver' in changed_id:
         with xmlrpc.client.ServerProxy("http://dash:8088") as proxy:
-            proxy.stop_webpageserver()
+            proxy.stop_server()
         msg = 'webpage server stopped'
 
     return html.Div(msg)

@@ -1,0 +1,8 @@
+gameserver:
+    path_fqn: /app/src/settlingInSpace/game/main.py
+    servername: rpc game
+    port: 8088
+dashserver:
+    path_fqn: /app/src/app.py
+    servername: webpage
+    port: 8088
