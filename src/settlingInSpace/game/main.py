@@ -54,6 +54,13 @@ class GameEngine_Interface():
         """
         self.game_engine.start()
         return True
+    
+    def getStarSystemsDict(self):
+        """
+        returns dictionary about all Stars
+        """
+        
+        return list(self.game_engine.gamemodel.get_starSystemsDict().keys())
         
         
 

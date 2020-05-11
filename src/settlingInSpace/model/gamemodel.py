@@ -9,6 +9,9 @@ class GameModel():
         """init method"""
         pass
     
+    def get_starSystemsDict(self):
+        return self.dict_starsystems
+    
     def configure(self):
         """
         configure Model
