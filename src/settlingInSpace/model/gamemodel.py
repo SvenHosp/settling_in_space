@@ -17,7 +17,7 @@ class GameModel():
     
     def initialize(
         self,
-        number_points=40,
+        main_config={},
         list_starnames=[],
         list_starsystemnames=[],
         szenario_path=None
@@ -26,54 +26,71 @@ class GameModel():
         initialize Model
         
         param szenario_path(String): path to a scenario file to be loaded
-        param number_points(int): absolute number of points
+        param main_config(dict): dict with main configs
         param list_starnames(List): list of names for stars
         param list_starsystemnames(List): list of names for objects in starsystems
         """
+        self.main_conf = main_config
         self.starnames = list_starnames
         self.starsystemnames = list_starsystemnames
         if(szenario_path is None):
             self.initialize_universe_random(
-                number_points=number_points
+                main_config=main_config
             )
         else:
             pass
     
     def initialize_universe_random(
         self,
-        number_points=40
+        main_config={}
     ):
         """
         create new universe with randomly set star systems
         
-        param number_points(int): absolute number of points
+        param main_config(dict): dict with main configs
         """
+        _vector_len=[
+            main_config['universe']['x_len'],
+            main_config['universe']['y_len'],
+            main_config['universe']['z_len']
+        ]
         dict_cylinder_points = GameModel.create_cylinder_points(
-            number_points=number_points
+            number_points=main_config['universe']['numberOfStars'],
+            vector_len=_vector_len
         )
         self.dict_starsystems = GameModel.create_starsystems(
             dict_points=dict_cylinder_points,
             list_starnames=self.starnames
         )
-        self.populate_starsystems()
+        self.populate_starsystems(
+            main_config=main_config
+        )
     
     def populate_starsystems(
         self,
-        max_step_size=100000,
-        min_step_size=10000,
-        max_speed=1
+        main_config={}
     ):
         """
         creates objects in star systems
         
-        param max_step_size(int): max distance between star objects
-        param min_step_size(int): min distance between star objects
+        param main_config(dict): dict with main configs
         """
         from random import Random
+        
+        max_step_size = main_config['universe']['createPlanetStepSizeMax']
+        min_step_size = main_config['universe']['createPlanetStepSizeMin']
+        max_speed = main_config['universe']['maxPlanetSpeed']
+        _limits = (
+            main_config['universe']['gaußParam']['limitsMin'],
+            main_config['universe']['gaußParam']['limitsMax']
+        )
         
         _random = Random()
         _list_names = self.starsystemnames.copy()
         _array_number_planets = GameModel.get_number_planets_gaussian_distribution(
+            loc=main_config['universe']['gaußParam']['loc'],
+            scale=main_config['universe']['gaußParam']['scale'],
+            limits=_limits,
             size=len(self.dict_starsystems)
         )
         for system in self.dict_starsystems.values():

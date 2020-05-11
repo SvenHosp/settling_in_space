@@ -1,0 +1,16 @@
+technical:
+    heartbeatSec: 1
+universe:
+    numberOfStars: 40
+    createPlanetStepSizeMin: 100000
+    createPlanetStepSizeMax: 10000
+    maxPlanetSpeed: 1
+    # universe size
+    x_len: 100
+    y_len: 100
+    z_len: 100
+    gaußParam:
+        loc: 6
+        scale: 3
+        limitsMin: 3
+        limitsMax: 12

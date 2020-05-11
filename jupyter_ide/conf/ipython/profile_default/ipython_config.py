@@ -629,5 +629,7 @@ c = get_config()
 #]
 
 c.InteractiveShellApp.exec_lines = [
-	'from plantuml import Plantuml'
+	'from plantuml import Plantuml',
+    'import ipytest',
+    'ipytest.autoconfig()'
 ]

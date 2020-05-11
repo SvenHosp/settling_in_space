@@ -39,18 +39,21 @@ class GameEngine_Interface():
         configure game
         """
         self.game_engine.configure()
+        return True
     
     def initialize(self):
         """
         initialize
         """
         self.game_engine.initialize()
+        return True
     
     def start(self):
         """
         call to start game
         """
         self.game_engine.start()
+        return True
         
         
 
@@ -80,8 +83,13 @@ class GameEngine():
         """
         initialize game engine
         """
+        main_config = GameEngine.parse_main_conf_yaml()
         list_starnames, list_starsystemnames = GameEngine.parse_names_yaml()
+        
+        self.heartbeat_sec = main_config['technical']['heartbeatSec']
+        
         self.gamemodel.initialize(
+            main_config=main_config,
             list_starnames=list_starnames,
             list_starsystemnames=list_starsystemnames
         )
@@ -107,6 +115,19 @@ class GameEngine():
         for system in self.gamemodel.dict_starsystems.values():
             system.move_natural_objects_through_system()
         pass
+    
+    @staticmethod
+    def parse_main_conf_yaml(yaml_fqn=None):
+        """parses main.yaml
+        
+        param: yaml_fqn(String): path to yaml
+        """
+        dict_from_yaml = {}
+        if yaml_fqn is None:
+            yaml_fqn = Path(Path(Path(__file__).parent).resolve()) / 'main.yaml'
+        with open(str(yaml_fqn), 'r') as ymlfile:
+            dict_from_yaml = yaml.safe_load(ymlfile)
+        return dict_from_yaml
     
     @staticmethod
     def parse_names_yaml(yaml_fqn=None):
