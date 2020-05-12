@@ -22,10 +22,12 @@ app.layout = html.Div(children=[
     ),
     html.Div(children=[
         html.H2(children='Main Menu'),
-        html.Div('status game server', id='gameserverstatus'),
+        html.Div('status game server', id='gameserverstatus', style={'color': 'red'}),
 
         html.Button('configure', id='configure', n_clicks=0),
+        html.Br(),
         html.Button('initialize', id='initialize', n_clicks=0),
+        html.Br(),
         html.Button('start', id='start', n_clicks=0),
         html.Div('status game server', id='gameserveroutput')
     ]),
@@ -42,10 +44,11 @@ app.layout = html.Div(children=[
         dcc.Dropdown(
             id='planetdropdown'
         ),
-        html.Div('no planet selectes', id='graphstarsystem')
+        html.Div('stars not loaded', id='graphstars'),
+        html.Div('no star selected', id='graphstarsystem')
         
     ],
-        style={'width': '600px', 'display': 'inline-block'}
+        style={'width': '400px', 'display': 'inline-block'}
     )
 ])
 
@@ -95,6 +98,29 @@ def update_planets_dropdown(sel_value):
         return [{'label': "No star selected.", 'value': '<empty>'}]
 
 
+@app.callback(dash.dependencies.Output('graphstars', 'children'),
+              [dash.dependencies.Input('loadStars', 'n_clicks')])
+def show_star_graph(sel_value):
+    #try:
+        import xmlrpc.client
+        import pandas as pd
+        
+        with xmlrpc.client.ServerProxy(game_conn) as proxy:
+            stars_list = proxy.getStarsAsList()
+            df = pd.DataFrame(stars_list, columns =['x', 'y', 'z', 'name'])
+            fig = px.scatter_3d(df, x='x', y='y', z='z', text='name')
+            fig.update_layout(
+                margin=dict(l=0, r=0, b=0, t=0),
+                hovermode='closest',
+                title = 'Dash Data Visualization'
+            )
+            graph = dcc.Graph(figure=fig)
+            
+            return graph
+    #except:
+        #return ''
+    
+
 @app.callback(dash.dependencies.Output('graphstarsystem', 'children'),
               [dash.dependencies.Input('stardropdown', 'value')])
 def show_star_graph(sel_value):
@@ -106,7 +132,9 @@ def show_star_graph(sel_value):
             star_obj_list = proxy.getStarSystemObjectsAsList(sel_value)
             df = pd.DataFrame(star_obj_list, columns =['x', 'y', 'z', 'name'])
             fig = px.scatter_3d(df, x='x', y='y', z='z',
-              color='name')
+              text='name')
+            # color='name'
+            fig.update_layout(margin=dict(l=0, r=0, b=0, t=0),hovermode='closest')
             graph = dcc.Graph(figure=fig)
             
             return graph

@@ -88,8 +88,21 @@ class GameEngine_Interface():
             starSystems_dict[star] = planet_list
         
         return starSystems_dict
+    
+    def getStarsAsList(self):
+        """
+        returns stars with their positions as a list
+        """
+        star_list = []
+        for name, star in self.game_engine.gamemodel.get_starSystemsDict().items():
+            star_list.append([star.position[0].item(),star.position[1].item(),star.position[2].item(),name])
+        
+        return star_list
 
     def getStarSystemObjectsAsList(self, starsystem=''):
+        """
+        returns star system objects with their positions as a list
+        """
         _star_list = self.game_engine.gamemodel.get_starSystemsDict()[starsystem].list_system_objects
         
         object_list = [[0.0,0.0,0.0,starsystem]]
