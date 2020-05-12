@@ -40,7 +40,9 @@ app.layout = html.Div(children=[
         dcc.Dropdown(
             id='planetdropdown'
         )
-    ])
+    ],
+        style={'width': '200px', 'display': 'inline-block'}
+    )
 ])
 
 """
@@ -85,28 +87,31 @@ def update_planets_dropdown(sel_value):
     [dash.dependencies.Input('configure', 'n_clicks'),
      dash.dependencies.Input('initialize', 'n_clicks'),
      dash.dependencies.Input('start', 'n_clicks')])
-def start_gameserver(btn1, btn2, btn3):
+def manage_gameserver(btn1, btn2, btn3):
     import xmlrpc.client
     msg = ''
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     global game_started
-    if 'configure' in changed_id:
-        with xmlrpc.client.ServerProxy(game_conn) as proxy:
-            proxy.configure()
+    try:
+        if 'configure' in changed_id:
+            with xmlrpc.client.ServerProxy(game_conn) as proxy:
+                proxy.configure()
+            game_started = False
+            msg = 'game configured (default)'
+        elif 'initialize' in changed_id:
+            with xmlrpc.client.ServerProxy(game_conn) as proxy:
+                proxy.initialize()
+            game_started = False
+            msg = 'game initialized and is now ready'
+        elif 'start' in changed_id:
+            with xmlrpc.client.ServerProxy(game_conn) as proxy:
+                proxy.start()
+            game_started = True
+            msg = 'game started'
+    except:
         game_started = False
-        msg = 'game configured (default)'
-    elif 'initialize' in changed_id:
-        with xmlrpc.client.ServerProxy(game_conn) as proxy:
-            proxy.initialize()
-        game_started = False
-        msg = 'game initialized and is now ready'
-    elif 'start' in changed_id:
-        with xmlrpc.client.ServerProxy(game_conn) as proxy:
-            proxy.start()
-        game_started = True
-        msg = 'game started'
-
-    return html.Div(msg)
+    finally:
+        return html.Div(msg)
 
 if __name__ == '__main__':
     app.run_server(debug=True, host='0.0.0.0')
