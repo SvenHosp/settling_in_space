@@ -55,12 +55,22 @@ class GameEngine_Interface():
         self.game_engine.start()
         return True
     
-    def getStarSystemsDict(self):
+    def getStarSystemsDictStatic(self):
         """
         returns dictionary about all Stars
         """
+        starSystems_dict = {}
         
-        return list(self.game_engine.gamemodel.get_starSystemsDict().keys())
+        _tmp_dict = self.game_engine.gamemodel.get_starSystemsDict()
+        
+        for star in _tmp_dict.keys():
+            planet_list = []
+            
+            for planet in _tmp_dict[star].list_system_objects:
+                planet_list.append(planet.name)
+            starSystems_dict[star] = planet_list
+        
+        return starSystems_dict
         
         
 

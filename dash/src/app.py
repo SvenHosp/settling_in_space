@@ -8,6 +8,8 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 game_conn = "http://rpcgame:8082"
 game_started = False
 
+starsystemsDictStatic = {}
+
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div(children=[
@@ -27,16 +29,21 @@ app.layout = html.Div(children=[
             n_intervals=0
         ),
         html.H2(children='GamePanel'),
+        html.Button('load Stars', id='loadStars', n_clicks=0),
 
         html.Div(children='''
             Stars:
         '''),
         dcc.Dropdown(
             id='stardropdown'
+        ),
+        dcc.Dropdown(
+            id='planetdropdown'
         )
     ])
 ])
 
+"""
 @app.callback(dash.dependencies.Output('stardropdown', 'options'),
               [dash.dependencies.Input('intervalComponent', 'n_intervals')])
 def update_stars(n):
@@ -49,6 +56,29 @@ def update_stars(n):
         return [{'label': i, 'value': i} for i in stars_list]
             
     return [{'label': "game not started yet.", 'value': '<empty>'}]
+"""
+@app.callback(dash.dependencies.Output('stardropdown', 'options'),
+              [dash.dependencies.Input('loadStars', 'n_clicks')])
+def update_stars_dropdown(n):
+    try:
+        import xmlrpc.client
+        global starsystemsDictStatic
+
+        stars_list = {}
+        with xmlrpc.client.ServerProxy(game_conn) as proxy:
+            starsystemsDictStatic = proxy.getStarSystemsDictStatic()
+
+        return [{'label': i, 'value': i} for i in list(starsystemsDictStatic.keys())]
+    except:
+        return [{'label': "game not started yet.", 'value': '<empty>'}]
+    
+@app.callback(dash.dependencies.Output('planetdropdown', 'options'),
+              [dash.dependencies.Input('stardropdown', 'value')])
+def update_planets_dropdown(sel_value):
+    try:
+        return [{'label': i, 'value': i} for i in starsystemsDictStatic[sel_value]]
+    except:
+        return [{'label': "No star selected.", 'value': '<empty>'}]
 
 @app.callback(
     dash.dependencies.Output('gameserveroutput', 'children'),
