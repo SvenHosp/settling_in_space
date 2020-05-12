@@ -2,11 +2,16 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import plotly.express as px
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 game_conn = "http://rpcgame:8082"
 game_started = False
+
+df = px.data.iris()
+fig = px.scatter_3d(df, x='sepal_length', y='sepal_width', z='petal_width',
+              color='species')
 
 starsystemsDictStatic = {}
 
@@ -30,7 +35,7 @@ app.layout = html.Div(children=[
     ]),
     html.Div(children=[
         html.H2(children='GamePanel'),
-        html.Button('load Stars', id='loadStars', n_clicks=0),
+        html.Button('show Stars', id='loadStars', n_clicks=0),
 
         html.Div(children='''
             Stars:
@@ -40,9 +45,10 @@ app.layout = html.Div(children=[
         ),
         dcc.Dropdown(
             id='planetdropdown'
-        )
+        ),
+        dcc.Graph(figure=fig)
     ],
-        style={'width': '200px', 'display': 'inline-block'}
+        style={'width': '400px', 'display': 'inline-block'}
     )
 ])
 

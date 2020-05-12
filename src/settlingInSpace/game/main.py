@@ -61,14 +61,20 @@ class GameEngine_Interface():
         return True
     
     def getRunningStats(self):
+        """
+        returns static game status
+        """
         return GAMESTATUS_RUNNING
     
     def getGameStatus(self):
+        """
+        returns current game status
+        """
         return self.game_engine.gamestatus
     
     def getStarSystemsDictStatic(self):
         """
-        returns dictionary about all Stars
+        returns dictionary with all Stars
         """
         starSystems_dict = {}
         
@@ -77,12 +83,21 @@ class GameEngine_Interface():
         for star in _tmp_dict.keys():
             planet_list = []
             
-            for planet in _tmp_dict[star].list_system_objects:
-                planet_list.append(planet.name)
+            for _obj in _tmp_dict[star].list_system_objects:
+                planet_list.append(_obj.name)
             starSystems_dict[star] = planet_list
         
         return starSystems_dict
+
+    def getStarSystemObjectsAsList(self, starsystem=''):
+        _star_list = self.game_engine.gamemodel.get_starSystemsDict()[starsystem].list_system_objects
         
+        object_list = []
+        
+        for _obj in _star_list:
+            object_list.append([_obj.position[0],_obj.position[1],_obj.position[2],_obj.name])
+        
+        return object_list
         
 
 class GameEngine():
