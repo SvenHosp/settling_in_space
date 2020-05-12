@@ -9,10 +9,6 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 game_conn = "http://rpcgame:8082"
 game_started = False
 
-df = px.data.iris()
-fig = px.scatter_3d(df, x='sepal_length', y='sepal_width', z='petal_width',
-              color='species')
-
 starsystemsDictStatic = {}
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
@@ -46,9 +42,10 @@ app.layout = html.Div(children=[
         dcc.Dropdown(
             id='planetdropdown'
         ),
-        dcc.Graph(figure=fig)
+        html.Div('no planet selectes', id='graphstarsystem')
+        
     ],
-        style={'width': '400px', 'display': 'inline-block'}
+        style={'width': '600px', 'display': 'inline-block'}
     )
 ])
 
@@ -88,7 +85,7 @@ def update_stars_dropdown(n):
         return [{'label': i, 'value': i} for i in list(starsystemsDictStatic.keys())]
     except:
         return [{'label': "game not started yet.", 'value': '<empty>'}]
-    
+
 @app.callback(dash.dependencies.Output('planetdropdown', 'options'),
               [dash.dependencies.Input('stardropdown', 'value')])
 def update_planets_dropdown(sel_value):
@@ -96,6 +93,26 @@ def update_planets_dropdown(sel_value):
         return [{'label': i, 'value': i} for i in starsystemsDictStatic[sel_value]]
     except:
         return [{'label': "No star selected.", 'value': '<empty>'}]
+
+
+@app.callback(dash.dependencies.Output('graphstarsystem', 'children'),
+              [dash.dependencies.Input('stardropdown', 'value')])
+def show_star_graph(sel_value):
+    try:
+        import xmlrpc.client
+        import pandas as pd
+        
+        with xmlrpc.client.ServerProxy(game_conn) as proxy:
+            star_obj_list = proxy.getStarSystemObjectsAsList(sel_value)
+            df = pd.DataFrame(star_obj_list, columns =['x', 'y', 'z', 'name'])
+            fig = px.scatter_3d(df, x='x', y='y', z='z',
+              color='name')
+            graph = dcc.Graph(figure=fig)
+            
+            return graph
+    except:
+        return ''
+
 
 @app.callback(
     dash.dependencies.Output('gameserveroutput', 'children'),
