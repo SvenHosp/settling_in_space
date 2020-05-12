@@ -9,6 +9,11 @@ from pathlib import Path
 import yaml
 from settlingInSpace.model.gamemodel import GameModel
 
+GAMESTATUS_DOWN = 'down'
+GAMESTATUS_INITIALIZED = 'initialized'
+GAMESTATUS_CONFIGURED = 'configured'
+GAMESTATUS_RUNNING = 'running'
+
 class SettlingMain():
     """Main class to start the game"""
     def __init__(self):
@@ -55,6 +60,12 @@ class GameEngine_Interface():
         self.game_engine.start()
         return True
     
+    def getRunningStats(self):
+        return GAMESTATUS_RUNNING
+    
+    def getGameStatus(self):
+        return self.game_engine.gamestatus
+    
     def getStarSystemsDictStatic(self):
         """
         returns dictionary about all Stars
@@ -89,12 +100,14 @@ class GameEngine():
         # TODO: read it from a config yaml
         self.heartbeat_sec = 1
         self.gamemodel = GameModel()
+        self.gamestatus = GAMESTATUS_DOWN
         
     def configure(self):
         """
         configure game engine
         """
         self.gamemodel.configure()
+        self.gamestatus = GAMESTATUS_CONFIGURED
     
     def initialize(self):
         """
@@ -110,10 +123,12 @@ class GameEngine():
             list_starnames=list_starnames,
             list_starsystemnames=list_starsystemnames
         )
+        self.gamestatus = GAMESTATUS_INITIALIZED
     
     def start(self):
         """start game engine"""
         self.startHeartBeat()
+        self.gamestatus = GAMESTATUS_RUNNING
     
     def startHeartBeat(self):
         """creates heartbeat thread"""

@@ -14,8 +14,14 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div(children=[
     html.H1(children='Settling in Space'),
+    dcc.Interval(
+        id='intervalComponent',
+        interval=1*1000, # in milliseconds
+        n_intervals=0
+    ),
     html.Div(children=[
         html.H2(children='Main Menu'),
+        html.Div('status game server', id='gameserverstatus'),
 
         html.Button('configure', id='configure', n_clicks=0),
         html.Button('initialize', id='initialize', n_clicks=0),
@@ -23,11 +29,6 @@ app.layout = html.Div(children=[
         html.Div('status game server', id='gameserveroutput')
     ]),
     html.Div(children=[
-        dcc.Interval(
-            id='intervalComponent',
-            interval=1*1000, # in milliseconds
-            n_intervals=0
-        ),
         html.H2(children='GamePanel'),
         html.Button('load Stars', id='loadStars', n_clicks=0),
 
@@ -45,20 +46,28 @@ app.layout = html.Div(children=[
     )
 ])
 
-"""
-@app.callback(dash.dependencies.Output('stardropdown', 'options'),
+
+@app.callback(dash.dependencies.Output('gameserverstatus', 'children'),
               [dash.dependencies.Input('intervalComponent', 'n_intervals')])
-def update_stars(n):
-    if game_started:
+def update_gamestatus(n):
+    global game_started
+    try:
         import xmlrpc.client
         
-        stars_list = {}
         with xmlrpc.client.ServerProxy(game_conn) as proxy:
-            stars_list = proxy.getStarSystemsDict()
-        return [{'label': i, 'value': i} for i in stars_list]
+            runningState = proxy.getRunningStats()
+            status = proxy.getGameStatus()
             
-    return [{'label': "game not started yet.", 'value': '<empty>'}]
-"""
+            if runningState == status:
+                game_started = True
+            else:
+                game_started = False
+            
+            return status
+    except:
+        game_started = False
+        return 'no connection possible'
+
 @app.callback(dash.dependencies.Output('stardropdown', 'options'),
               [dash.dependencies.Input('loadStars', 'n_clicks')])
 def update_stars_dropdown(n):
@@ -91,25 +100,22 @@ def manage_gameserver(btn1, btn2, btn3):
     import xmlrpc.client
     msg = ''
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
-    global game_started
+    
     try:
         if 'configure' in changed_id:
             with xmlrpc.client.ServerProxy(game_conn) as proxy:
                 proxy.configure()
-            game_started = False
             msg = 'game configured (default)'
         elif 'initialize' in changed_id:
             with xmlrpc.client.ServerProxy(game_conn) as proxy:
                 proxy.initialize()
-            game_started = False
             msg = 'game initialized and is now ready'
         elif 'start' in changed_id:
             with xmlrpc.client.ServerProxy(game_conn) as proxy:
                 proxy.start()
-            game_started = True
             msg = 'game started'
     except:
-        game_started = False
+        pass
     finally:
         return html.Div(msg)
 
