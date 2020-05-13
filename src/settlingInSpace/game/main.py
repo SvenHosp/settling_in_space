@@ -105,10 +105,10 @@ class GameEngine_Interface():
         """
         _star_list = self.game_engine.gamemodel.get_starSystemsDict()[starsystem].list_system_objects
         
-        object_list = [[0.0,0.0,0.0,starsystem]]
+        object_list = [[0.0,0.0,0.0,starsystem,'star']]
         
         for _obj in _star_list:
-            object_list.append([_obj.position[0].item(),_obj.position[1].item(),_obj.position[2].item(),_obj.name])
+            object_list.append([_obj.position[0].item(),_obj.position[1].item(),_obj.position[2].item(),_obj.name,'planet'])
         
         return object_list
         

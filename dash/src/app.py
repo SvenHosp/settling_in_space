@@ -20,35 +20,41 @@ app.layout = html.Div(children=[
         interval=1*1000, # in milliseconds
         n_intervals=0
     ),
-    html.Div(children=[
-        html.H2(children='Main Menu'),
-        html.Div('status game server', id='gameserverstatus', style={'color': 'red'}),
+    dcc.Tabs([
+        dcc.Tab(label='Main Menu', children=[
+            html.Div(children=[
+                html.Div('status game server', id='gameserverstatus', style={'color': 'red'}),
 
-        html.Button('configure', id='configure', n_clicks=0),
-        html.Br(),
-        html.Button('initialize', id='initialize', n_clicks=0),
-        html.Br(),
-        html.Button('start', id='start', n_clicks=0),
-        html.Div('status game server', id='gameserveroutput')
-    ]),
-    html.Div(children=[
-        html.H2(children='GamePanel'),
-        html.Button('show Stars', id='loadStars', n_clicks=0),
+                html.Button('configure', id='configure', n_clicks=0),
+                html.Br(),
+                html.Button('initialize', id='initialize', n_clicks=0),
+                html.Br(),
+                html.Button('start', id='start', n_clicks=0),
+                html.Div('status game server', id='gameserveroutput')
+            ])
+        ]),
+        dcc.Tab(label='Game Panel', children=[
+            html.Div(children=[
+                html.Button('show Stars', id='loadStars', n_clicks=0),
 
-        html.Div(children='''
-            Stars:
-        '''),
-        dcc.Dropdown(
-            id='stardropdown'
-        ),
-        dcc.Dropdown(
-            id='planetdropdown'
-        ),
-        html.Div('stars not loaded', id='graphstars'),
-        html.Div('no star selected', id='graphstarsystem')
-        
+                html.Div(children='''
+                    Stars:
+                '''),
+                dcc.Dropdown(
+                    id='stardropdown'
+                ),
+                dcc.Dropdown(
+                    id='planetdropdown'
+                ),
+                html.Div('stars not loaded', id='graphstars'),
+                html.Div('no star selected', id='graphstarsystem')
+
+            ],
+                style={'width': '400px', 'display': 'inline-block'}
+            )
+        ])
     ],
-        style={'width': '400px', 'display': 'inline-block'}
+                style={'width': '800px', 'display': 'inline-block'}
     )
 ])
 
@@ -101,7 +107,7 @@ def update_planets_dropdown(sel_value):
 @app.callback(dash.dependencies.Output('graphstars', 'children'),
               [dash.dependencies.Input('loadStars', 'n_clicks')])
 def show_star_graph(sel_value):
-    #try:
+    try:
         import xmlrpc.client
         import pandas as pd
         
@@ -117,22 +123,21 @@ def show_star_graph(sel_value):
             graph = dcc.Graph(figure=fig)
             
             return graph
-    #except:
-        #return ''
+    except:
+        return ''
     
 
 @app.callback(dash.dependencies.Output('graphstarsystem', 'children'),
               [dash.dependencies.Input('stardropdown', 'value')])
-def show_star_graph(sel_value):
+def show_starsystem_graph(sel_value):
     try:
         import xmlrpc.client
         import pandas as pd
         
         with xmlrpc.client.ServerProxy(game_conn) as proxy:
             star_obj_list = proxy.getStarSystemObjectsAsList(sel_value)
-            df = pd.DataFrame(star_obj_list, columns =['x', 'y', 'z', 'name'])
-            fig = px.scatter_3d(df, x='x', y='y', z='z',
-              text='name')
+            df = pd.DataFrame(star_obj_list, columns =['x', 'y', 'z', 'name', 'type'])
+            fig = px.scatter_3d(df, x='x', y='y', z='z', color='type', text='name')
             # color='name'
             fig.update_layout(margin=dict(l=0, r=0, b=0, t=0),hovermode='closest')
             graph = dcc.Graph(figure=fig)
