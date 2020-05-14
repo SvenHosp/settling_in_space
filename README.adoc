@@ -1,5 +1,25 @@
 = Settling in Space
 
+== Installation
+
+You need to install docker, docker-compose.
+
+To start game navigate into the repo directory and run
+
+docker-compose up
+
+In development
+
+docker-compose up --build
+
+Open a browser and play:
+
+localhost:8082 <- Jupyterlab
+
+localhost:8083 <- Admin Site
+
+localhost:8081 <- Game Site
+
 == short description
 It is a game about expanding earths hegemony in a part of our galaxy.
 
