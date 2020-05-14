@@ -35,28 +35,47 @@ app.layout = html.Div(children=[
         ]),
         dcc.Tab(label='Game Panel', children=[
             html.Div(children=[
-                html.Button('show Stars', id='loadStars', n_clicks=0),
-
                 html.Div(children='''
-                    Stars:
+                    Stars
                 '''),
-                dcc.Dropdown(
-                    id='stardropdown'
+                html.Button(
+                    'show Stars',
+                    id='loadStars',
+                    n_clicks=0,
+                    style={
+                        'float': 'left'
+                    }
                 ),
                 dcc.Dropdown(
-                    id='planetdropdown'
+                    id='stardropdown',
+                    placeholder='Select Star ...',
+                    style={
+                        'float': 'left',
+                        'width': '300px'
+                    }
                 ),
-                html.Div('stars not loaded', id='graphstars'),
-                html.Div('no star selected', id='graphstarsystem')
-
+                dcc.Dropdown(
+                    id='planetdropdown',
+                    placeholder='Select Object...',
+                    style={
+                        'float': 'left',
+                        'width': '300px'
+                    }
+                )
             ],
-                style={'width': '400px', 'display': 'inline-block'}
-            )
+                className='row'
+            ),
+            html.Div(children=[
+                html.Article(children=[
+                    html.Div('stars not loaded', id='graphstars'),
+                    html.Div('no star selected', id='graphstarsystem')
+                ])
+            ])
         ])
-    ],
-                style={'width': '800px', 'display': 'inline-block'}
-    )
-])
+    ])
+],
+        style={'width': '800px', 'display': 'inline-block'}
+)
 
 
 @app.callback(dash.dependencies.Output('gameserverstatus', 'children'),
