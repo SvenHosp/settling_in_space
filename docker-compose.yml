@@ -33,9 +33,9 @@ services:
      - "8088"
   jupyterlab:
     image: "calisto/jupyterlab"
-#    build:
-#      context: ./jupyter_ide
-#      dockerfile: Dockerfile
+    build:
+      context: ./jupyter_ide
+      dockerfile: Dockerfile
     volumes:
       - /Users/svenhosp/Documents/repos/github:/home/calisto/github
     environment:

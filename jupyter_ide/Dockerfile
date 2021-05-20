@@ -31,7 +31,7 @@ RUN useradd -r -u $NB_UID -g $NB_GID $NB_USER
 ADD requirements.txt requirements.txt
 
 COPY start_lab.sh /home/$NB_USER/
-COPY tools /home/$NB_USER/tools/
+#COPY tools /home/$NB_USER/tools/
 COPY conf tmp/conf
 COPY src tmp/src
 
@@ -52,7 +52,7 @@ RUN apt-get update \
     && wget --quiet "http://downloads.sourceforge.net/project/plantuml/${PLANTUML_VERSION}/plantuml.${PLANTUML_VERSION}.jar" -O /app/plantuml.jar
 
 COPY start_lab.sh /home/$NB_USER/
-COPY tools /home/$NB_USER/tools/
+#COPY tools /home/$NB_USER/tools/
 COPY conf tmp/conf
 COPY src tmp/src
 

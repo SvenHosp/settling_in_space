@@ -2,12 +2,14 @@ FROM python:3
 
 WORKDIR /app
 
-RUN pip install --upgrade pip==20.0.2
+RUN pip install --upgrade pip==21.1.1
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY admin/rpc_server/admin_rpc.py /app/admin_rpc.py
 COPY admin/rpc_server/config.yaml /app/config.yaml
+
+RUN chmod 777 -R /app
 
 EXPOSE 8082
 EXPOSE 8088
